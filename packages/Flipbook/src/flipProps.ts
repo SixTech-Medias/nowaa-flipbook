@@ -1,4 +1,4 @@
-import type { ExtractPropTypes } from 'vue'
+import type { ExtractPropTypes, PropType } from 'vue'
 
 export const flipProps = {
   pages: {
@@ -72,6 +72,10 @@ export const flipProps = {
   wheel: {
     type: String,
     default: 'scroll'
+  },
+  pageHotspots: {
+    type: Object as PropType<Record<number, any[]>>,
+    default: () => ({})
   }
 }
 
