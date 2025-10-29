@@ -41,30 +41,82 @@
           @click="flipRight"
         />
         <div :style="{ transform: `translateX(${currentCenterOffset}px)` }">
-          <img
+          <!-- Left Page with hotspots -->
+          <div
             v-if="showLeftPage"
-            class="page fixed"
+            class="page-container fixed"
             :style="{
               width: pageWidth + 'px',
               height: pageHeight + 'px',
               left: xMargin + 'px',
-              top: yMargin + 'px'
+              top: yMargin + 'px',
+              position: 'absolute'
             }"
-            :src="pageUrlLoading(leftPage, true)"
-            @load="didLoadImage"
-          />
-          <img
+          >
+            <img
+              class="page-image"
+              :style="{
+                width: '100%',
+                height: '100%'
+              }"
+              :src="pageUrlLoading(leftPage, true)"
+              @load="didLoadImage"
+            />
+
+            <!-- Hotspots overlay on left page -->
+            <div
+              class="page-hotspots"
+              :style="{
+                opacity: 1 - flip.opacity,
+                pointerEvents: flip.opacity > 0.1 ? 'none' : 'auto',
+                zIndex: flip.opacity > 0.1 ? 1 : 10
+              }"
+            >
+              <slot
+                name="hotspot"
+                :hotspots="leftPageHotspots"
+                :page="leftPage"
+              />
+            </div>
+          </div>
+          <!-- Right Page with hotspots -->
+          <div
             v-if="showRightPage"
-            class="page fixed"
+            class="page-container fixed"
             :style="{
               width: pageWidth + 'px',
               height: pageHeight + 'px',
               left: viewWidth / 2 + 'px',
-              top: yMargin + 'px'
+              top: yMargin + 'px',
+              position: 'absolute'
             }"
-            :src="pageUrlLoading(rightPage, true)"
-            @load="didLoadImage"
-          />
+          >
+            <img
+              class="page-image"
+              :style="{
+                width: '100%',
+                height: '100%'
+              }"
+              :src="pageUrlLoading(rightPage, true)"
+              @load="didLoadImage"
+            />
+
+            <!-- Hotspots overlay on right page -->
+            <div
+              class="page-hotspots"
+              :style="{
+                opacity: 1 - flip.opacity,
+                pointerEvents: flip.opacity > 0.1 ? 'none' : 'auto',
+                zIndex: flip.opacity > 0.1 ? 1 : 10
+              }"
+            >
+              <slot
+                name="hotspot"
+                :hotspots="rightPageHotspots"
+                :page="rightPage"
+              />
+            </div>
+          </div>
 
           <div :style="{ opacity: flip.opacity }">
             <div
@@ -244,6 +296,14 @@ const rightPage = computed(() => {
 const showLeftPage = computed(() => pageUrl(leftPage.value))
 
 const showRightPage = computed(() => pageUrl(rightPage.value) && displayedPages.value === 2)
+
+const leftPageHotspots = computed(() => {
+  return props.pageHotspots[leftPage.value] || []
+})
+
+const rightPageHotspots = computed(() => {
+  return props.pageHotspots[rightPage.value] || []
+})
 
 const cursor = computed(() => {
   if (activeCursor.value) {
@@ -866,6 +926,26 @@ watch(
   .polygon .lighting {
     width: 100%;
     height: 100%;
+  }
+
+  .page-container {
+    position: absolute;
+  }
+
+  .page-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+  }
+
+  .page-hotspots {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity 0.2s ease, z-index 0s;
   }
 }
 </style>
