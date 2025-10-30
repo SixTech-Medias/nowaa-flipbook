@@ -177,14 +177,8 @@ import { ref, reactive, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import useZoom from './useZoom'
 import type { TouchPoint } from './useZoom'
 import useImageLoad from './useImageLoad'
-import { createConsola } from 'consola'
 import { flipProps } from './flipProps'
-const logger = createConsola({
-  level: 4 // 设置日志级别为 silent
-})
 
-// 现在，这个文件中的 consola 日志将不会被输出
-logger.info('This will not be logged')
 const emit = defineEmits<emitEvents>()
 const props = defineProps(flipProps)
 
@@ -409,7 +403,6 @@ onMounted(() => {
     passive: true
   })
   zoom.value = props.zooms[0]
-  logger.info('props.startPage', props.startPage)
   goToPage(props.startPage)
 })
 
@@ -479,10 +472,6 @@ const makePolygonArray = (face: string) => {
   flip.opacity = displayedPages.value === 1 && progress > 0.7 ? 1 - (progress - 0.7) / 0.3 : 1
 
   let image = face === 'front' ? flip.frontImage : flip.backImage
-  logger.info('flip.backImage', flip.backImage)
-  logger.info('flip.frontImage', flip.frontImage)
-  logger.info('face', face)
-  logger.info('image', image)
   const polyWidth = pageWidth.value / props.nPolygons
   const { pageX, originRight } = calculatePageXAndOrigin(
     face,
