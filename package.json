@@ -28,8 +28,9 @@
   },
   "scripts": {
     "build": "vue-tsc --declaration --emitDeclarationOnly --declarationDir typings && vite build",
+    "build:dist": "vite build",
     "type": "vue-tsc --declaration --emitDeclarationOnly --declarationDir typings",
-    "publish": "node publish.js"
+    "prepare": "npm run build:dist"
   },
   "main": "./dist/vue3-flipbook.js",
   "module": "./dist/vue3-flipbook.mjs",
@@ -44,6 +45,7 @@
     "vue-material-design-icons": "^5.2.0"
   },
   "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
     "rematrix": "^0.7.2",
     "sass": "^1.69.7",
     "vite": "^5.0.11",
